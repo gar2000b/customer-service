@@ -42,5 +42,9 @@ show tables;
 select * from users;
 
 To connect from the host (linux terminal) for example:
-
 mysql -h localhost -P 3306 --protocol=tcp -u social -p1234
+
+Logging into docker and pushing images:
+docker login -u "gar2000b" -p "enter-password-here" docker.io
+docker push gar2000b/mysql
+
