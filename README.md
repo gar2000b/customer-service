@@ -41,5 +41,6 @@ use users;
 show tables;
 select * from users;
 
+To connect from the host (linux terminal) for example:
 
-
+mysql -h localhost -P 3306 --protocol=tcp -u social -p1234
