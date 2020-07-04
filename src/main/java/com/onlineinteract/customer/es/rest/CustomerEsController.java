@@ -56,9 +56,9 @@ public class CustomerEsController {
 	@ResponseBody
 	public ResponseEntity<String> createCustomer(@RequestBody Customer customer) {
 		System.out.println("*** createCustomer() called ***");
-		String userId = UUID.randomUUID().toString();
-		customer.setId(userId);
-		eventStoreRepository.addEvent(userId, new CustomerCreatedEvent(customer));
+		String customerId = UUID.randomUUID().toString();
+		customer.setId(customerId);
+		eventStoreRepository.addEvent(customerId, new CustomerCreatedEvent(customer));
 		return new ResponseEntity<>("createCustomer(): " + JsonParser.toJson(customer), HttpStatus.OK);
 	}
 
