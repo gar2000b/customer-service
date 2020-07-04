@@ -1,4 +1,4 @@
-package com.onlineinteract.fileserver.domain;
+package com.onlineinteract.customer.domain;
 
 public class Asset {
 	String name;

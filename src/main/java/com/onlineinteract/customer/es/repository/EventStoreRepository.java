@@ -1,4 +1,4 @@
-package com.onlineinteract.fileserver.es.repository;
+package com.onlineinteract.customer.es.repository;
 
 import java.util.ArrayList;
 import java.util.HashMap;
@@ -8,7 +8,7 @@ import java.util.Set;
 
 import org.springframework.stereotype.Repository;
 
-import com.onlineinteract.fileserver.es.events.Event;
+import com.onlineinteract.customer.es.events.Event;
 
 @Repository
 public class EventStoreRepository {

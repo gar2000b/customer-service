@@ -1,11 +1,11 @@
-package com.onlineinteract.fileserver.crud.repository;
+package com.onlineinteract.customer.crud.repository;
 
 import java.util.HashMap;
 import java.util.Map;
 
 import org.springframework.stereotype.Repository;
 
-import com.onlineinteract.fileserver.domain.Customer;
+import com.onlineinteract.customer.domain.Customer;
 
 @Repository
 public class CustomerCrudRepository {

@@ -1,4 +1,4 @@
-package com.onlineinteract.fileserver.es.events;
+package com.onlineinteract.customer.es.events;
 
 import java.util.Date;
 import java.util.UUID;

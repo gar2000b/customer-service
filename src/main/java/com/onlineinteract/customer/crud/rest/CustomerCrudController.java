@@ -1,4 +1,4 @@
-package com.onlineinteract.fileserver.crud.rest;
+package com.onlineinteract.customer.crud.rest;
 
 import java.util.Map;
 import java.util.Set;
@@ -16,11 +16,11 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.ResponseBody;
 
-import com.onlineinteract.fileserver.crud.repository.CustomerCrudRepository;
-import com.onlineinteract.fileserver.domain.Asset;
-import com.onlineinteract.fileserver.domain.Customer;
-import com.onlineinteract.fileserver.domain.Reference;
-import com.onlineinteract.fileserver.utility.JsonParser;
+import com.onlineinteract.customer.crud.repository.CustomerCrudRepository;
+import com.onlineinteract.customer.domain.Asset;
+import com.onlineinteract.customer.domain.Customer;
+import com.onlineinteract.customer.domain.Reference;
+import com.onlineinteract.customer.utility.JsonParser;
 
 @Controller
 @EnableAutoConfiguration

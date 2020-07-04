@@ -1,4 +1,4 @@
-package com.onlineinteract.fileserver.es.rest;
+package com.onlineinteract.customer.es.rest;
 
 import java.util.Map;
 import java.util.Set;
@@ -16,15 +16,15 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.ResponseBody;
 
-import com.onlineinteract.fileserver.crud.repository.CustomerCrudRepository;
-import com.onlineinteract.fileserver.domain.Asset;
-import com.onlineinteract.fileserver.domain.Customer;
-import com.onlineinteract.fileserver.domain.Reference;
-import com.onlineinteract.fileserver.es.events.CustomerCreatedEvent;
-import com.onlineinteract.fileserver.es.events.CustomerUpdatedEvent;
-import com.onlineinteract.fileserver.es.repository.EventStoreRepository;
-import com.onlineinteract.fileserver.es.utility.CustomerUtility;
-import com.onlineinteract.fileserver.utility.JsonParser;
+import com.onlineinteract.customer.crud.repository.CustomerCrudRepository;
+import com.onlineinteract.customer.domain.Asset;
+import com.onlineinteract.customer.domain.Customer;
+import com.onlineinteract.customer.domain.Reference;
+import com.onlineinteract.customer.es.events.CustomerCreatedEvent;
+import com.onlineinteract.customer.es.events.CustomerUpdatedEvent;
+import com.onlineinteract.customer.es.repository.EventStoreRepository;
+import com.onlineinteract.customer.es.utility.CustomerUtility;
+import com.onlineinteract.customer.utility.JsonParser;
 
 @Controller
 @EnableAutoConfiguration

@@ -1,4 +1,4 @@
-package com.onlineinteract.fileserver.utility;
+package com.onlineinteract.customer.utility;
 
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.ObjectMapper;

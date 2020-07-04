@@ -1,15 +1,15 @@
-package com.onlineinteract.fileserver.es.utility;
+package com.onlineinteract.customer.es.utility;
 
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.Set;
 
-import com.onlineinteract.fileserver.domain.Customer;
-import com.onlineinteract.fileserver.es.events.CustomerCreatedEvent;
-import com.onlineinteract.fileserver.es.events.CustomerUpdatedEvent;
-import com.onlineinteract.fileserver.es.events.Event;
-import com.onlineinteract.fileserver.es.repository.EventStoreRepository;
+import com.onlineinteract.customer.domain.Customer;
+import com.onlineinteract.customer.es.events.CustomerCreatedEvent;
+import com.onlineinteract.customer.es.events.CustomerUpdatedEvent;
+import com.onlineinteract.customer.es.events.Event;
+import com.onlineinteract.customer.es.repository.EventStoreRepository;
 
 public class CustomerUtility {
 

@@ -1,4 +1,4 @@
-package com.onlineinteract.fileserver;
+package com.onlineinteract.customer;
 
 import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;

@@ -1,6 +1,6 @@
-package com.onlineinteract.fileserver.es.events;
+package com.onlineinteract.customer.es.events;
 
-import com.onlineinteract.fileserver.domain.Customer;
+import com.onlineinteract.customer.domain.Customer;
 
 public class CustomerUpdatedEvent extends Event {
 	private Customer customer;

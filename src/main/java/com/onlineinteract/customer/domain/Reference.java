@@ -1,4 +1,4 @@
-package com.onlineinteract.fileserver.domain;
+package com.onlineinteract.customer.domain;
 
 public class Reference {
 	String forename;
