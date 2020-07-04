@@ -1,4 +1,4 @@
-package com.onlineinteract.fileserver.crud.rest;
+package com.onlineinteract.fileserver.es.rest;
 
 import java.util.Map;
 import java.util.Set;
@@ -20,27 +20,34 @@ import com.onlineinteract.fileserver.crud.repository.CustomerCrudRepository;
 import com.onlineinteract.fileserver.domain.Asset;
 import com.onlineinteract.fileserver.domain.Customer;
 import com.onlineinteract.fileserver.domain.Reference;
+import com.onlineinteract.fileserver.es.events.CustomerCreatedEvent;
+import com.onlineinteract.fileserver.es.events.CustomerUpdatedEvent;
+import com.onlineinteract.fileserver.es.repository.EventStoreRepository;
+import com.onlineinteract.fileserver.es.utility.CustomerUtility;
 import com.onlineinteract.fileserver.utility.JsonParser;
 
 @Controller
 @EnableAutoConfiguration
-@RequestMapping("/crud")
-public class CustomerCrudController {
+@RequestMapping("/es")
+public class CustomerEsController {
 
 	@Autowired
 	CustomerCrudRepository customerRepository;
+	
+	@Autowired
+	EventStoreRepository eventStoreRepository;
 
 	/**
 	 * createCustomer()
 	 * 
-	 * curl -i -H "Content-Type:application/json" -X POST --data '{"id":"",
+	 * curl -i -H "Content-Type:application/json" -X POST --data '{"id":"1234",
 	 * "forename":"Gary", "surname":"Black", "dob":"01/01/1980", "address1":"12 Elf
 	 * Avenue", "address2":"", "city":"Laplando", "postcode":"X1M2A5",
 	 * "sin":"9876543210", "references":[{"forename":"Daniel", "surname":"Lester",
 	 * "telephoneNumber":"416-123-4567", "sin":"8765432109"},{"forename":"Linda",
 	 * "surname":"Hamilton", "telephoneNumber":"416-123-4563", "sin":"6543210978"}],
 	 * "assets":[{"name":"House", "value":"$400,000"},{"name":"Vehicle",
-	 * "value":"$35,000"}]}' http://localhost:9082/crud/customer
+	 * "value":"$35,000"}]}' http://localhost:9082/es/customer
 	 * 
 	 * @param customer
 	 * @return
@@ -51,14 +58,14 @@ public class CustomerCrudController {
 		System.out.println("*** createCustomer() called ***");
 		String userId = UUID.randomUUID().toString();
 		customer.setId(userId);
-		customerRepository.addCustomer(userId, customer);
+		eventStoreRepository.addEvent(userId, new CustomerCreatedEvent(customer));
 		return new ResponseEntity<>("createCustomer(): " + JsonParser.toJson(customer), HttpStatus.OK);
 	}
 
 	/**
 	 * getCustomer()
 	 * 
-	 * curl -i http://localhost:9082/crud/customer/e90d1e9b-7ebc-4ae8-a4d4-9a041c637849
+	 * curl -i http://localhost:9082/es/customer/e90d1e9b-7ebc-4ae8-a4d4-9a041c637849
 	 * 
 	 * @param customerId
 	 * @return
@@ -67,29 +74,29 @@ public class CustomerCrudController {
 	@ResponseBody
 	public ResponseEntity<String> getCustomer(@PathVariable String customerId) {
 		System.out.println("*** getCustomer() called with customerId of: " + customerId + " ***");
-		Customer customer = customerRepository.getCustomer(customerId);
+		Customer customer = CustomerUtility.recreateCustomerState(eventStoreRepository, customerId);
 		return new ResponseEntity<>("getCustomer(): " + JsonParser.toJson(customer), HttpStatus.OK);
 	}
 	
 	/**
 	 * getAllCustomers()
 	 * 
-	 * curl -i http://localhost:9082/crud/customers
+	 * curl -i http://localhost:9082/es/customers
 	 * 
 	 * @return
 	 */
 	@RequestMapping(method = RequestMethod.GET, produces = "application/json", value = "/customers")
 	@ResponseBody
 	public ResponseEntity<String> getAllCustomers() {
-		System.out.println("*** getAllCustomers() called ***");
-		Map<String, Customer> allCustomers = customerRepository.getAllCustomers();
+		System.out.println("*** getAllCustomers() called ***");		
+		Map<String, Customer> allCustomers = CustomerUtility.getAllCustomers(eventStoreRepository);
 		return new ResponseEntity<>("getAllCustomers(): " + JsonParser.toJson(allCustomers), HttpStatus.OK);
 	}
 	
 	/**
 	 * getCustomerCount()
 	 * 
-	 * curl -i http://localhost:9082/crud/customer/count
+	 * curl -i http://localhost:9082/es/customer/count
 	 * 
 	 * @param customerId
 	 * @return
@@ -98,21 +105,21 @@ public class CustomerCrudController {
 	@ResponseBody
 	public ResponseEntity<String> getCustomerCount() {
 		System.out.println("*** getCustomerCount() called ***");
-		int count = customerRepository.customerCount();
+		int count = CustomerUtility.getCustomerCount(eventStoreRepository);
 		return new ResponseEntity<>("*** getCustomerCount() fetched with count of: " + count + " ***", HttpStatus.OK);
 	}
 
 	/**
 	 * updateCustomer()
 	 * 
-	 * curl -i -H "Content-Type:application/json" -X PUT --data '{"id":"",
+	 * curl -i -H "Content-Type:application/json" -X PUT --data '{"id":"1234",
 	 * "forename":"Gary", "surname":"Black", "dob":"01/01/1980", "address1":"12 Elf
 	 * Avenue", "address2":"", "city":"Laplando", "postcode":"X1M2A5",
 	 * "sin":"9876543210", "references":[{"forename":"Daniel", "surname":"Lester",
 	 * "telephoneNumber":"416-123-4567", "sin":"8765432109"},{"forename":"Linda",
 	 * "surname":"Hamilton", "telephoneNumber":"416-123-4563", "sin":"6543210978"}],
 	 * "assets":[{"name":"House", "value":"$400,000"},{"name":"Vehicle",
-	 * "value":"$35,000"}]}' http://localhost:9082/crud/customer
+	 * "value":"$35,000"}]}' http://localhost:9082/es/customer
 	 * 
 	 * @param customer
 	 * @return
@@ -121,20 +128,14 @@ public class CustomerCrudController {
 	@ResponseBody
 	public ResponseEntity<String> updateCustomer(@RequestBody Customer customer) {
 		System.out.println("*** updateCustomer() called ***");
-		Customer customerOrig = customerRepository.getCustomer(customer.getId());
-		if (customerOrig.equals(customer)) {
-			System.out.println("**** customer passed in is equal ****");
-		} else {
-			System.out.println("**** customer passed in is not equal ****");
-		}
-		customerRepository.addCustomer(customer.getId(), customer);
+		eventStoreRepository.addEvent(customer.getId(), new CustomerUpdatedEvent(customer));
 		return new ResponseEntity<>("updateCustomer(): " + JsonParser.toJson(customer), HttpStatus.OK);
 	}
 
 	/**
 	 * getAllReferences()
 	 * 
-	 * curl -i http://localhost:9082/crud/customer/1234/references
+	 * curl -i http://localhost:9082/es/customer/1234/references
 	 * 
 	 * @param customerId
 	 * @return
@@ -143,7 +144,7 @@ public class CustomerCrudController {
 	@ResponseBody
 	public ResponseEntity<String> getAllReferences(@PathVariable String customerId) {
 		System.out.println("*** getAllReferences() called with customerId of: " + customerId + " ***");
-		Customer customer = customerRepository.getCustomer(customerId);
+		Customer customer = CustomerUtility.recreateCustomerState(eventStoreRepository, customerId);
 		Set<Reference> references = customer.getReferences();
 		return new ResponseEntity<>("getAllReferences(): " + JsonParser.toJson(references), HttpStatus.OK);
 	}
@@ -151,7 +152,7 @@ public class CustomerCrudController {
 	/**
 	 * getAllAssets()
 	 * 
-	 * curl -i http://localhost:9082/crud/customer/1234/assets
+	 * curl -i http://localhost:9082/es/customer/1234/assets
 	 * 
 	 * @param customerId
 	 * @return
@@ -160,7 +161,7 @@ public class CustomerCrudController {
 	@ResponseBody
 	public ResponseEntity<String> getAllAssets(@PathVariable String customerId) {
 		System.out.println("*** getAllAssets() called with customerId of: " + customerId + " ***");
-		Customer customer = customerRepository.getCustomer(customerId);
+		Customer customer = CustomerUtility.recreateCustomerState(eventStoreRepository, customerId);
 		Set<Asset> assets = customer.getAssets();
 		return new ResponseEntity<>("getAllAssets(): " + JsonParser.toJson(assets), HttpStatus.OK);
 	}
@@ -168,7 +169,7 @@ public class CustomerCrudController {
 	/**
 	 * getReferenceBySin()
 	 * 
-	 * curl -i http://localhost:9082/crud/customer/1234/reference/sin/5678
+	 * curl -i http://localhost:9082/es/customer/1234/reference/sin/5678
 	 * 
 	 * @param customerId
 	 * @param sin
@@ -179,7 +180,7 @@ public class CustomerCrudController {
 	public ResponseEntity<String> getReferencesBySin(@PathVariable String customerId, @PathVariable String sin) {
 		System.out.println(
 				"*** getReferencesBySin() called with customerId of: " + customerId + " and sin of: " + sin + " ***");
-		Customer customer = customerRepository.getCustomer(customerId);
+		Customer customer = CustomerUtility.recreateCustomerState(eventStoreRepository, customerId);
 		Set<Reference> references = customer.getReferences();
 		Set<Reference> referencesFilteredBySin = references.stream().filter(a -> a.getSin().equals(sin))
 				.collect(Collectors.toSet());
@@ -190,7 +191,7 @@ public class CustomerCrudController {
 	/**
 	 * getAssetById()
 	 * 
-	 * curl -i http://localhost:9082/crud/customer/1234/asset/5678
+	 * curl -i http://localhost:9082/es/customer/1234/asset/5678
 	 * 
 	 * @param customerId
 	 * @param assetId
@@ -201,7 +202,7 @@ public class CustomerCrudController {
 	public ResponseEntity<String> getAssetsByName(@PathVariable String customerId, @PathVariable String assetName) {
 		System.out.println(
 				"*** getAssetsByName() called with customerId of: " + customerId + " and name of: " + assetName + " ***");
-		Customer customer = customerRepository.getCustomer(customerId);
+		Customer customer = CustomerUtility.recreateCustomerState(eventStoreRepository, customerId);
 		Set<Asset> assets = customer.getAssets();
 		Set<Asset> assetsFilteredByName = assets.stream().filter(a -> a.getName().equals(assetName))
 				.collect(Collectors.toSet());

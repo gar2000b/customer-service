@@ -8,7 +8,7 @@ import org.springframework.stereotype.Repository;
 import com.onlineinteract.fileserver.domain.Customer;
 
 @Repository
-public class CustomerRepository {
+public class CustomerCrudRepository {
 	private Map<String, Customer> store = new HashMap<>();
 
 	public void addCustomer(String id, Customer customer) {
