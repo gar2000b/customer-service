@@ -10,6 +10,7 @@ public class CustomerUpdatedEvent extends Event {
 
 	public CustomerUpdatedEvent(Customer customer) {
 		this.customer = customer;
+		this.setType("CustomerUpdatedEvent");
 	}
 
 	public Customer getCustomer() {

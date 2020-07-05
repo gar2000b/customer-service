@@ -1,5 +1,7 @@
 package com.onlineinteract.customer.utility;
 
+import java.io.IOException;
+
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
 
@@ -14,5 +16,16 @@ public class JsonParser {
 			System.out.println("There was a problem converting customer map to json String: " + e.getOriginalMessage());
 		}
 		return json;
+	}
+
+	public static <T> T fromJson(String json, Class<T> c) {
+		ObjectMapper mapper = new ObjectMapper();
+		T readValue = null;
+		try {
+			readValue = mapper.readValue(json, c);
+		} catch (IOException e) {
+			e.printStackTrace();
+		}
+		return readValue;
 	}
 }

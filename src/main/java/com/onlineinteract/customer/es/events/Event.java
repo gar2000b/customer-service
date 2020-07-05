@@ -1,18 +1,30 @@
 package com.onlineinteract.customer.es.events;
 
 import java.util.Date;
-import java.util.UUID;
 
 public abstract class Event {
 
-    public final UUID id = UUID.randomUUID();
-    public final Date created = new Date();
-	
-    public UUID getId() {
+	private String id;
+	private String type;
+	private final Date created = new Date();
+
+	public String getId() {
 		return id;
 	}
-	
+
+	public void setId(String id) {
+		this.id = id;
+	}
+
 	public Date getCreated() {
 		return created;
+	}
+
+	public String getType() {
+		return type;
+	}
+
+	public void setType(String type) {
+		this.type = type;
 	}
 }

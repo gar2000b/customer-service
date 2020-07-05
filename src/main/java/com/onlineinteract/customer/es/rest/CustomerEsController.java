@@ -33,7 +33,7 @@ public class CustomerEsController {
 
 	@Autowired
 	CustomerCrudRepository customerRepository;
-	
+
 	@Autowired
 	EventStoreRepository eventStoreRepository;
 
@@ -58,14 +58,17 @@ public class CustomerEsController {
 		System.out.println("*** createCustomer() called ***");
 		String customerId = UUID.randomUUID().toString();
 		customer.setId(customerId);
-		eventStoreRepository.addEvent(customerId, new CustomerCreatedEvent(customer));
+		CustomerCreatedEvent customerCreatedEvent = new CustomerCreatedEvent(customer);
+		customerCreatedEvent.setId(String.valueOf(customerCreatedEvent.getCreated().getTime()));
+		eventStoreRepository.publishEvent(customerCreatedEvent, customerId);
 		return new ResponseEntity<>("createCustomer(): " + JsonParser.toJson(customer), HttpStatus.OK);
 	}
 
 	/**
 	 * getCustomer()
 	 * 
-	 * curl -i http://localhost:9082/es/customer/e90d1e9b-7ebc-4ae8-a4d4-9a041c637849
+	 * curl -i
+	 * http://localhost:9082/es/customer/e90d1e9b-7ebc-4ae8-a4d4-9a041c637849
 	 * 
 	 * @param customerId
 	 * @return
@@ -77,7 +80,7 @@ public class CustomerEsController {
 		Customer customer = CustomerUtility.recreateCustomerState(eventStoreRepository, customerId);
 		return new ResponseEntity<>("getCustomer(): " + JsonParser.toJson(customer), HttpStatus.OK);
 	}
-	
+
 	/**
 	 * getAllCustomers()
 	 * 
@@ -88,11 +91,11 @@ public class CustomerEsController {
 	@RequestMapping(method = RequestMethod.GET, produces = "application/json", value = "/customers")
 	@ResponseBody
 	public ResponseEntity<String> getAllCustomers() {
-		System.out.println("*** getAllCustomers() called ***");		
+		System.out.println("*** getAllCustomers() called ***");
 		Map<String, Customer> allCustomers = CustomerUtility.getAllCustomers(eventStoreRepository);
 		return new ResponseEntity<>("getAllCustomers(): " + JsonParser.toJson(allCustomers), HttpStatus.OK);
 	}
-	
+
 	/**
 	 * getCustomerCount()
 	 * 
@@ -128,7 +131,7 @@ public class CustomerEsController {
 	@ResponseBody
 	public ResponseEntity<String> updateCustomer(@RequestBody Customer customer) {
 		System.out.println("*** updateCustomer() called ***");
-		eventStoreRepository.addEvent(customer.getId(), new CustomerUpdatedEvent(customer));
+		eventStoreRepository.publishEvent(new CustomerUpdatedEvent(customer), customer.getId());
 		return new ResponseEntity<>("updateCustomer(): " + JsonParser.toJson(customer), HttpStatus.OK);
 	}
 
@@ -200,8 +203,8 @@ public class CustomerEsController {
 	@RequestMapping(method = RequestMethod.GET, produces = "application/json", value = "/customer/{customerId}/asset/{assetName}")
 	@ResponseBody
 	public ResponseEntity<String> getAssetsByName(@PathVariable String customerId, @PathVariable String assetName) {
-		System.out.println(
-				"*** getAssetsByName() called with customerId of: " + customerId + " and name of: " + assetName + " ***");
+		System.out.println("*** getAssetsByName() called with customerId of: " + customerId + " and name of: "
+				+ assetName + " ***");
 		Customer customer = CustomerUtility.recreateCustomerState(eventStoreRepository, customerId);
 		Set<Asset> assets = customer.getAssets();
 		Set<Asset> assetsFilteredByName = assets.stream().filter(a -> a.getName().equals(assetName))
