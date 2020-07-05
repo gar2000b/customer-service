@@ -2,6 +2,7 @@ package com.onlineinteract.customer.es.bus;
 
 import java.util.Arrays;
 import java.util.Properties;
+import java.util.Set;
 
 import javax.annotation.PostConstruct;
 import javax.annotation.PreDestroy;
@@ -9,6 +10,7 @@ import javax.annotation.PreDestroy;
 import org.apache.kafka.clients.consumer.ConsumerRecord;
 import org.apache.kafka.clients.consumer.ConsumerRecords;
 import org.apache.kafka.clients.consumer.KafkaConsumer;
+import org.apache.kafka.common.TopicPartition;
 import org.apache.kafka.common.serialization.StringDeserializer;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
@@ -40,6 +42,8 @@ public class Consumer {
 	}
 
 	private void processRecords() {
+		consumer.poll(0);
+		consumer.seekToBeginning(consumer.assignment());
 		runningFlag = true;
 		System.out.println("Spinning up kafka consumer");
 		new Thread(() -> {
