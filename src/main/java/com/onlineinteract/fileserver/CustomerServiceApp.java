@@ -25,10 +25,10 @@ public class CustomerServiceApp {
 	}
 
 	private static void connectDB() {
-		String dbUrl = "mysql.canadacentral.azurecontainer.io";
+		String dbUrl = "192.168.0.30";
 		String db = "users";
-		String username = "social";
-		String password = "1234";
+		String username = "root";
+		String password = "password";
 
 		if (databaseConnection != null)
 			return;

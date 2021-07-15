@@ -46,20 +46,20 @@ public class CustomerController {
 		Statement statement = CustomerServiceApp.databaseConnection.createStatement();
 		statement.setQueryTimeout(60);
 		statement.setFetchSize(1000);
-		ResultSet rs = statement.executeQuery("SELECT * from users where user_id = " + userId + ";");
+		ResultSet rs = statement.executeQuery("SELECT * from users where user_id = " + customerId + ";");
 		rs.next();
 
 		Map<String, String> customer = new HashMap<String, String>();
 		customer.put("CustomerId", rs.getString("user_id"));
-		customer.put("AccountNumber", "12345678");
-		customer.put("Forename", rs.getString("name"));
-		customer.put("Surname", "Beaton");
-		customer.put("DOB", "22/04/78");
-		customer.put("Address1", "123-456-789");
-		customer.put("Address2", "123-456-789");
-		customer.put("City", "123-456-789");
-		customer.put("Postcode", "123-456-789");
-		customer.put("SIN", "123-456-789");
+		customer.put("AccountNumber", rs.getString("account_number"));
+		customer.put("Forename", rs.getString("forename"));
+		customer.put("Surname", rs.getString("surname"));
+		customer.put("DOB", rs.getString("dob"));
+		customer.put("Address1", rs.getString("address_1"));
+		customer.put("Address2", rs.getString("address_2"));
+		customer.put("City", rs.getString("city"));
+		customer.put("Postcode", rs.getString("postcode"));
+		customer.put("SIN", rs.getString("sin"));
 		
 		rs.close();
 		statement.close();

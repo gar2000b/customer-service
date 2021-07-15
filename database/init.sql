@@ -1,6 +1,6 @@
-create table users (user_id INT NOT NULL AUTO_INCREMENT PRIMARY KEY, name TEXT, phone_number TEXT);
-insert into users (name, phone_number) values ('Alex', '+1 416 837 2913');
-insert into users (name, phone_number) values ('Josephine', '+1 416 837 2914');
-insert into users (name, phone_number) values ('Rex', '+1 416 837 2915');
-insert into users (name, phone_number) values ('Jill', '+1 416 837 2916');
-insert into users (name, phone_number) values ('Paul', '+1 416 837 2917');
+create table users (user_id INT NOT NULL AUTO_INCREMENT PRIMARY KEY, forename TEXT, surname TEXT, account_number TEXT, dob TEXT, address_1 TEXT, address_2 TEXT, city TEXT, postcode TEXT, sin TEXT, phone_number TEXT);
+insert into users (forename, surname, account_number, dob, address_1, address_2, city, postcode, sin, phone_number) values ('Alex', 'Beaton', '12345678', '22/04/76', '142 Potter Way', 'Ingles', 'Surrey', 'SU12 3HG', '123-456-789', '+1 416 837 2913');
+insert into users (forename, surname, account_number, dob, address_1, address_2, city, postcode, sin, phone_number) values ('Josephine', 'Clarke', '142663236', '15/07/83', '35 Roxburgh Lane', 'Meles', 'Oxford', 'O65 8FD', '385-198-184', '+1 416 837 2914');
+insert into users (forename, surname, account_number, dob, address_1, address_2, city, postcode, sin, phone_number) values ('Rex', 'Smith', '83623513', '09/11/80', '35 Oldmill Road', 'Rocherston', 'Cromwell', 'CI12 9UI', '295-916-095', '+1 416 837 2915');
+insert into users (forename, surname, account_number, dob, address_1, address_2, city, postcode, sin, phone_number) values ('Jill', 'White', '28530451', '27/06/77', '14 Walk Way', 'High Lake', 'Tielferd', 'T12 2FG', '835-124-623', '+1 416 837 2916');
+insert into users (forename, surname, account_number, dob, address_1, address_2, city, postcode, sin, phone_number) values ('Paul', 'Macgregor', '47568254', '14/02/89', '47 Danbury Crescent', 'Helensport', 'Shropsburgh', 'SO78 2GH', '123-456-789', '+1 416 837 2917');
