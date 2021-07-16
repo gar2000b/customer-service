@@ -26,7 +26,7 @@ public class CustomerServiceApp {
 
 	private static void connectDB() {
 		String dbUrl = "192.168.0.30";
-		String db = "users";
+		String db = "loans";
 		String username = "root";
 		String password = "password";
 
@@ -65,8 +65,8 @@ public class CustomerServiceApp {
 		statement.setFetchSize(1000);
 		ResultSet rs = statement.executeQuery("SELECT 'PONG' AS PING;");
 		rs.next();
-		if (rs.getString("PING").equals("PONG"))
-			System.out.println("*** DB Keep Alive Triggered OK ***");
+		if (!rs.getString("PING").equals("PONG"))
+			System.out.println("*** Problem - did not receive PONG from DB ***");
 
 		rs.close();
 		statement.close();
