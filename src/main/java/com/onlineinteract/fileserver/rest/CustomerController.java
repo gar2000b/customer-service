@@ -6,7 +6,6 @@ import java.sql.Statement;
 import java.util.HashMap;
 import java.util.Iterator;
 import java.util.Map;
-import java.util.Random;
 
 import org.springframework.boot.autoconfigure.EnableAutoConfiguration;
 import org.springframework.http.HttpHeaders;
@@ -39,10 +38,7 @@ public class CustomerController {
 			Map.Entry pair = (Map.Entry) it.next();
 			System.out.println(pair.getKey() + " = " + pair.getValue());
 		}
-		
-		Random random = new Random();
-		int userId = random.nextInt(5 - 1 + 1) + 1;
-		
+
 		Statement statement = CustomerServiceApp.databaseConnection.createStatement();
 		statement.setQueryTimeout(60);
 		statement.setFetchSize(1000);
@@ -60,10 +56,16 @@ public class CustomerController {
 		customer.put("City", rs.getString("city"));
 		customer.put("Postcode", rs.getString("postcode"));
 		customer.put("SIN", rs.getString("sin"));
-		
+
 		rs.close();
 		statement.close();
 
+		String customerJson = extractCustomer(customer);
+
+		return new ResponseEntity<>(customerJson, HttpStatus.OK);
+	}
+
+	protected String extractCustomer(Map<String, String> customer) {
 		ObjectMapper mapper = new ObjectMapper();
 		String customerJson = null;
 		try {
@@ -72,7 +74,6 @@ public class CustomerController {
 		} catch (JsonProcessingException e) {
 			System.out.println("There was a problem converting customer map to json String: " + e.getOriginalMessage());
 		}
-
-		return new ResponseEntity<>(customerJson, HttpStatus.OK);
+		return customerJson;
 	}
 }
